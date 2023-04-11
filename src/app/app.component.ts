@@ -7,7 +7,7 @@ import { NgSwitch, NgSwitchDefault, NgSwitchCase } from '@angular/common';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     standalone: true,
-    imports: [NgSwitch, NgSwitchDefault, NgSwitchCase, RouterOutlet]
+    imports: [RouterOutlet]
 })
 export class AppComponent {
   title = '01-trello';
