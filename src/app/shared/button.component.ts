@@ -1,6 +1,6 @@
 import { Colors, Padding } from '@/interfaces/button.interface';
 import { NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-button',
@@ -15,6 +15,8 @@ import { Component, Input } from '@angular/core';
       <ng-content></ng-content>
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+
 })
 export class ButtonComponent {
   @Input() color: Colors = 'primary';
@@ -36,8 +38,11 @@ export class ButtonComponent {
   };
 
   mapPadding:Record<Padding,Record<string,boolean>> = {
+    'py-1':{
+      "py-1":true
+    },
     'py-2': {
-        'py-2':true
+        'py-2':true,
     },
     'py-3': {
         'py-3':true
