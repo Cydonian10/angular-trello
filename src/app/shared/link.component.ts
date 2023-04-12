@@ -1,30 +1,37 @@
 import { Colors, Padding } from '@/interfaces/button.interface';
-import { NgClass } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import {  RouterModule } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-link',
-  imports: [NgClass,RouterModule],
+  imports: [NgClass,RouterModule,AsyncPipe],
   standalone: true,
   template: `
+    <!-- [routerLinkActiveOptions]="{ exact: true}" -->
     <button
       type="button"
       [ngClass]="colors"
-      [routerLink]="link"
-      [routerLinkActiveOptions]="{ exact: true}"
+      [routerLink]="_link|async"
       [routerLinkActive]="active"
       class="px-5 w-full text-left font-medium rounded-md text-sm transition-all"
     >
       <ng-content></ng-content>
     </button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinkComponent {
   @Input() color: Colors = 'primary';
   @Input() padding: Padding = 'py-3';
-  @Input() link:string = ""
+  // @Input()  link:string = ""
+  public _link = new BehaviorSubject("")
+
+  @Input("link") set link(value:string) {
+    this._link.next(value)
+  }
+
 
   mapActive: Record<Colors, Record<string, boolean>> = {
     success: {

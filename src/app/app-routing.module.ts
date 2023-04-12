@@ -15,11 +15,11 @@ const routes: Routes = [
     component: LoginPage,
   },
   {
-    path:"boards",
+    path:"",
     component:BoardsLayout,
     children:[
       {
-        path:"",
+        path:"boards",
         component:BoardsPage
       },
       {

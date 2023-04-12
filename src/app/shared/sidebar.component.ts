@@ -17,7 +17,7 @@ import { NgClass, NgIf } from '@angular/common';
             <span>Bords</span>
           </div>
         </app-link>
-        <app-link link="/boards/table" padding="py-2">
+        <app-link link="/table" padding="py-2">
           <div class="flex items-center gap-1">
             <img src="assets/icons/template.svg" alt="trello" />
             <span>Templates</span>
