@@ -16,9 +16,9 @@ export class RedirectGuard implements CanActivate, CanMatch {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-      const token = this.tokenSrv.getToken()
+      const isValidToken = this.tokenSrv.isValidToken()
 
-      if(token) {
+      if(isValidToken) {
         this.router.navigate(["/boards"])
       }
   

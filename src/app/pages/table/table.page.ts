@@ -11,12 +11,12 @@ import { AsyncPipe, NgClass } from '@angular/common';
 import { DataSourceProducts } from './data/data-source';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {  debounceTime } from 'rxjs';
+import { SpinnerComponent } from "../../shared/spinner.component";
 
 @Component({
-  selector: 'app-table',
-  standalone: true,
-  imports: [CdkTableModule, NgClass,AsyncPipe,ReactiveFormsModule],
-  template: `
+    selector: 'app-table',
+    standalone: true,
+    template: `
     <section>
       <h1 class="font-bold text-2xl pb-10">Table Products</h1>
 
@@ -99,10 +99,15 @@ import {  debounceTime } from 'rxjs';
             </th>
           </ng-container>
         </table>
+
+        <div class="text-center py-4">
+          <app-spinner></app-spinner>
+        </div>
       </div>
     </section>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CdkTableModule, NgClass, AsyncPipe, ReactiveFormsModule, SpinnerComponent]
 })
 export class TableComponent implements OnInit {
   private productSrv = inject(ProductService);

@@ -6,12 +6,12 @@ import { OverlayLayout } from '@/layouts/overlay.layout';
 import { AuthService } from '@/services/auth.service';
 import { ProfileStore } from '@/store/profile.store';
 import { AsyncPipe, TitleCasePipe } from '@angular/common';
+import { SpinnerComponent } from "./spinner.component";
 
 @Component({
-  selector: 'app-navbar',
-  standalone: true,
-  imports: [RouterOutlet, ButtonComponent, OverlayModule, OverlayLayout,AsyncPipe,TitleCasePipe],
-  template: `
+    selector: 'app-navbar',
+    standalone: true,
+    template: `
     <div
       class="w-full bg-primary-600 text-white p-4 flex  gap-4 items-center  justify-between"
     >
@@ -68,6 +68,9 @@ import { AsyncPipe, TitleCasePipe } from '@angular/common';
         <h1>Menu overlay</h1>
 
         <div class="py-2">
+          <div class="text-center">
+            <app-spinner></app-spinner>
+          </div>
           <p>{{(profile$|async)?.name | titlecase }}</p>
         </div>
 
@@ -92,7 +95,8 @@ import { AsyncPipe, TitleCasePipe } from '@angular/common';
       </layout-overlay>
     </ng-template>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [RouterOutlet, ButtonComponent, OverlayModule, OverlayLayout, AsyncPipe, TitleCasePipe, SpinnerComponent]
 })
 export class NavBarComponent {
   private authSrv = inject(AuthService)

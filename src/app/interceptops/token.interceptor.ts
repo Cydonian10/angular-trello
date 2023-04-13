@@ -27,7 +27,10 @@ export class TokenInterceptor implements HttpInterceptor {
 
     if(request.context.get(CHECK_TOKEN)) {
       return this.addToken(request,next);
-    }
+    } 
+    // else { 
+      // return this.updateTokenAndRefreshToken(request,next)
+    // }
     return next.handle(request)
   }
 
@@ -39,6 +42,20 @@ export class TokenInterceptor implements HttpInterceptor {
       })
       return next.handle(authRequest)
     }
+    return next.handle(request)
+
+  }
+
+  private updateTokenAndRefreshToken(request: HttpRequest<unknown>,next: HttpHandler) {
+    const refreshToken = this.tokenSrv.getRefreshToken()
+    const isValidRefreshToken = this.tokenSrv.isValidRefreshToken()
+
+    if(refreshToken && isValidRefreshToken) {
+      //return authSrv.refreshToken(refreshToken).pipe(
+       // switchMap(()=> this.addToken(request,next))
+      //  )
+    }
+
     return next.handle(request)
 
   }
