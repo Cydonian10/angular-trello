@@ -1,13 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { ButtonComponent } from './button.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { OverlayLayout } from '@/layouts/overlay.layout';
+import { AuthService } from '@/services/auth.service';
+import { ProfileStore } from '@/store/profile.store';
+import { AsyncPipe, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterOutlet, ButtonComponent, OverlayModule, OverlayLayout],
+  imports: [RouterOutlet, ButtonComponent, OverlayModule, OverlayLayout,AsyncPipe,TitleCasePipe],
   template: `
     <div
       class="w-full bg-primary-600 text-white p-4 flex  gap-4 items-center  justify-between"
@@ -63,7 +66,17 @@ import { OverlayLayout } from '@/layouts/overlay.layout';
     >
       <layout-overlay (onClose)="toogleMenu(false)">
         <h1>Menu overlay</h1>
-      </layout-overlay>
+
+        <div class="py-2">
+          <p>{{(profile$|async)?.name | titlecase }}</p>
+        </div>
+
+      <div class="mt-4">
+      <app-button (click)="logout()" color="success" padding="py-1" >
+          Cerrar
+        </app-button>
+      </div>
+      </layout-overlay>s
     </ng-template>
 
     <!-- Create Overlay -->
@@ -82,6 +95,10 @@ import { OverlayLayout } from '@/layouts/overlay.layout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavBarComponent {
+  private authSrv = inject(AuthService)
+  private router = inject(Router)
+  public profile$ = inject(ProfileStore).user$ 
+
   isOpenMenu: boolean = false;
   isOpenCreate: boolean = false;
 
@@ -91,5 +108,10 @@ export class NavBarComponent {
 
   toogleMenu(value: boolean) {
     this.isOpenMenu = value;
+  }
+
+  logout() {
+    this.authSrv.logout()
+    this.router.navigate(["/"])
   }
 }

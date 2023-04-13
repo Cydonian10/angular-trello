@@ -20,7 +20,7 @@ import { BehaviorSubject } from 'rxjs';
       <ng-content></ng-content>
     </button>
   `,
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinkComponent {
   @Input() color: Colors = 'primary';

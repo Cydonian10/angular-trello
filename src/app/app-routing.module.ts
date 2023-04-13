@@ -8,15 +8,25 @@ import { TableComponent } from '@/pages/table/table.page';
 
 import { BoardsLayout } from '@/layouts/boards.layout';
 import { BoardLayout } from '@/layouts/board.layout';
+import { RegisterPage } from '@/pages/register/register.page';
+import { AuthGuard } from '@/guards/auth.guard';
+import { RedirectGuard } from './guards/redirect.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: LoginPage,
+    canActivate:[RedirectGuard]
+  },
+  {
+    path:"register",
+    component:RegisterPage,
+    canActivate:[RedirectGuard]
   },
   {
     path:"",
     component:BoardsLayout,
+    canActivate:[AuthGuard],
     children:[
       {
         path:"boards",
@@ -31,6 +41,7 @@ const routes: Routes = [
   {
     path:"board",
     component:BoardLayout,
+    canActivate:[AuthGuard],
     children:[
       {
         path:"",
@@ -38,8 +49,6 @@ const routes: Routes = [
       }
     ]
   },
-
- 
 ];
 
 @NgModule({

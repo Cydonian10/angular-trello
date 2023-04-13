@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { InputComponent } from '@/shared/input.component';
 import { ButtonComponent } from "@/shared/button.component";
-import { LoginFormComponent } from "./components/login-form.components";
+import { RegisterFormComponent } from './components/register-form.component';
 
 @Component({
-    selector: 'app-login',
+    selector: 'app-register',
     standalone: true,
     template: `
     <section class="min-h-screen">
@@ -33,19 +33,18 @@ import { LoginFormComponent } from "./components/login-form.components";
           </div>
           <!-- Card Formulario -->
           <article class="bg-white shadow-md rounded-md p-6 mt-4">
-            <h3 class="text-center font-semibold pb-4">Log In to trello</h3>
+            <h3 class="text-center font-semibold pb-4">Registrate en trello</h3>
 
             <!-- Form -->
-           <app-login-form></app-login-form>
+          <app-register-form></app-register-form>
           </article>
         </header>
       </div>
     </section>
   `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [InputComponent, ButtonComponent, LoginFormComponent]
+    imports: [InputComponent, ButtonComponent,RegisterFormComponent]
 })
-export class LoginPage {
+export class RegisterPage  {
 
-  
 }

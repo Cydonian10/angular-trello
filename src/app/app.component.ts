@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NgSwitch, NgSwitchDefault, NgSwitchCase } from '@angular/common';
+import { ProfileService } from './services/profile.service';
 
 @Component({
     selector: 'app-root',
@@ -10,5 +10,10 @@ import { NgSwitch, NgSwitchDefault, NgSwitchCase } from '@angular/common';
     imports: [RouterOutlet]
 })
 export class AppComponent {
-  title = '01-trello';
+
+  private profileSrv = inject(ProfileService)
+
+  ngOnInit() {
+    this.profileSrv.getProfile().subscribe()
+  }
 }
