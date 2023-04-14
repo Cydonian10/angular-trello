@@ -5,7 +5,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   standalone: true,
   imports: [],
   template: `
-    <div class="bg-white py-4 px-6 rounded-lg shadow-xl relative w-[200px]">
+    <div class="bg-white py-4 px-6 rounded-lg shadow-xl relative min-w-[250px] max-w-[400px]">
       <button class="absolute top-2 right-2 hover:bg-gray-400 hover:rounded-full" (click)="closeOverlay()">
         <img  src="assets/icons/close.svg" alt="close">
       </button>

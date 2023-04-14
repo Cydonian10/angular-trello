@@ -8,8 +8,8 @@ import { NgClass, NgIf } from '@angular/common';
   standalone: true,
   imports: [LinkComponent, CdkAccordionModule,NgIf,NgClass],
   template: `
-    <nav class="w-[280px] border-r-[1px] outlet">
-      <div class="p-1 flex flex-col gap-[0.5px] py-5">
+    <nav class="w-[280px] border-r-[1px] outlet py-7 px-2">
+      <div class="flex flex-col gap-[0.5px] pb-10">
         <!-- Links -->
         <app-link link="/boards" padding="py-2">
           <div class="flex items-center gap-1">

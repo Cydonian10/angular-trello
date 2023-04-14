@@ -5,6 +5,7 @@ import { Injectable, inject } from '@angular/core';
 import { tap } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { checkToken } from '@/interceptops/token.interceptor';
+import { IBoard } from '@/interfaces/board.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
@@ -16,5 +17,9 @@ export class ProfileService {
     return this.http
       .get<IUser>(`${this.url}/profile`, {context:checkToken()})
       .pipe(tap((user) => this.profileStore.setUser(user)));
+  }
+
+  getMeBoards() {
+    return this.http.get<IBoard[]>(`${this.url}/profile/boards`,{context:checkToken()})
   }
 }

@@ -1,72 +1,85 @@
-import { NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy, inject } from '@angular/core';
 import {
   CdkDragDrop,
   DragDropModule,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { Colum, Todo } from '@/interfaces/todo.interface';
-import { ButtonComponent } from '../../shared/button.component';
-import { OverlayLayout } from '../../layouts/overlay.layout';
-import { OverlayModule } from '@angular/cdk/overlay';
+
+import { ActivatedRoute, Router } from '@angular/router';
+import { BoardService } from '@/services/board.service';
+import { ButtonComponent } from '@/shared/button.component';
+import { CardService } from '@/services/card.service';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { ICard, IList, UpdateCardDto } from '@/interfaces/board.interface';
+import { map, switchMap, tap } from 'rxjs';
+import { OverlayLayout } from '@/layouts/overlay.layout';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { SpinnerComponent } from '@/shared/spinner.component';
 import { TodoModalComponent } from './components/todo-modal.component';
+import { CardFormComponent } from "./components/card-form.component";
+import { ListFormComponent } from "./components/list-form.component";
+import { ThemeBoarStore } from '@/store/theme.store';
 
 @Component({
-  selector: 'app-board',
-  standalone: true,
-  imports: [
-    NgFor,
-    DragDropModule,
-    ButtonComponent,
-    OverlayLayout,
-    OverlayModule,
-    DialogModule,
-  ],
-  template: `
+    selector: 'app-board',
+    standalone: true,
+    template: `
     <section class="py-8 px-6 flex items-start gap-4 w-full" cdkDropListGroup>
-      <!-- Lista de tareas Container -->
-      <div
-        *ngFor="let col of colums"
-        class="bg-gray-200 w-[300px] snap-center flex-shrink-0 rounded-md p-4 "
-      >
-        <div class="flex justify-between items-center">
-          <header class="font-semibold">{{ col.title }}</header>
+      <div class="text-center w-full absolute top-10 right-10">
+        <app-spinner></app-spinner>
+      </div>
 
-          <button
-            cdkOverlayOrigin
-            #trigger="cdkOverlayOrigin"
-            (click)="toogleCreate(trigger, true)"
-          >
-            <img src="assets/icons/menu_card.svg" alt="" />
-          </button>
-        </div>
-
-        <!-- Cards Container -->
-        <article
-          [cdkDropListData]="col.todos"
-          class="mt-5 space-y-2 min-h-[15px]"
-          cdkDropList
-          (cdkDropListDropped)="dropList($event)"
+      <ng-container *ngIf="board$ | async as board">
+        <!-- Lista de tareas Container -->
+        <div
+          *ngFor="let list of board.list"
+          class="bg-gray-200 w-[300px] snap-center flex-shrink-0 rounded-md p-4"
         >
-          <!-- Card item -->
-          <div
-            cdkDrag
-            *ngFor="let item of col.todos"
-            (click)="openModalTodo(item)"
-            class="bg-white w-full min-h-[50px] rounded-md shadow-md p-2"
-          >
-            <div >
-              {{ item.title }}
-            </div>
-          </div>
-        </article>
-      </div>
+          <div class="flex justify-between items-center">
+            <header class="font-semibold">{{ list.title }}</header>
 
-      <div class="flex flex-shrink-0 w-[200px]">
-        <app-button (click)="addColum()" padding="py-3">Nueva lista</app-button>
-      </div>
+            <button
+              cdkOverlayOrigin
+              #trigger="cdkOverlayOrigin"
+              (click)="toogleCreate(trigger, true)"
+            >
+              <img src="assets/icons/menu_card.svg" alt="" />
+            </button>
+          </div>
+
+          <!-- Cards Container -->
+          <article
+            [cdkDropListData]="list.cards"
+            class="mt-5 space-y-2 min-h-[20px]"
+            [id]="list.id.toString()"
+            cdkDropList
+            (cdkDropListDropped)="dropList($event)"
+          >
+            <!-- Card item -->
+            <div
+              cdkDrag
+              *ngFor="let item of list.cards"
+              (click)="openModalTodo(item)"
+              class="bg-white w-full min-h-[50px] rounded-md shadow-md p-2 cursor-pointer"
+            >
+              <div>
+                {{ item.title }} - {{item.position}}
+              </div>
+            </div>
+
+            <!-- Button add cardd-->
+
+          </article>
+          <div class="mt-5">
+            <app-card-form [list]="list" ></app-card-form>
+          </div>
+        </div>
+        <div class="flex flex-shrink-0 w-[300px]">
+          <app-list-form [lists]="board.list" [boardId]="board.id" ></app-list-form>
+        </div>
+      </ng-container>
     </section>
 
     <ng-template
@@ -81,8 +94,8 @@ import { TodoModalComponent } from './components/todo-modal.component';
       </layout-overlay>
     </ng-template>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
       }
@@ -97,10 +110,37 @@ import { TodoModalComponent } from './components/todo-modal.component';
         transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgFor,
+        DragDropModule,
+        ButtonComponent,
+        OverlayLayout,
+        OverlayModule,
+        DialogModule,
+        AsyncPipe,
+        NgIf,
+        SpinnerComponent,
+        CardFormComponent,
+        ListFormComponent
+    ]
 })
-export class BoardPage {
+export class BoardPage implements OnDestroy {
+  private themeBoard = inject(ThemeBoarStore)
+  private route = inject(ActivatedRoute);
+  private boardSrv = inject(BoardService);
+  private cardSrv = inject(CardService);
+
+  public board$ = this.route.paramMap.pipe(
+    map((resp) => resp.get('id')!),
+    switchMap((id) => this.boardSrv.getBoard(Number(id)).pipe(
+      tap((resp) => {
+        this.themeBoard.setThemeBoard(resp.backgroundColor)
+      })
+    ))
+  );
+
   triggerOrigin: any;
   isOpen = false;
 
@@ -109,45 +149,20 @@ export class BoardPage {
     this.isOpen = value;
   }
 
-  colums: Colum[] = [
-    {
-      title: 'Todos',
-      todos: [
-        { id: 1, title: 'tarea 1' },
-        { id: 2, title: 'tarea 2' },
-        { id: 3, title: 'tarea 3' },
-      ],
-    },
-    {
-      title: 'Doing',
-      todos: [
-        { id: 4, title: 'tarea 4' },
-        { id: 5, title: 'tarea 5' },
-      ],
-    },
-    {
-      title: 'Done',
-      todos: [
-        { id: 6, title: 'tarea 6' },
-        { id: 7, title: 'tarea 7' },
-      ],
-    },
-  ];
-
   private dialog = inject(Dialog);
 
-  openModalTodo(data:any) {
+  openModalTodo(data: any) {
     const resfModal = this.dialog.open(TodoModalComponent, {
       minWidth: '300',
       data,
-      disableClose:true
+      disableClose: true,
     });
     resfModal.closed.subscribe((resp) => {
       console.log(resp);
     });
   }
 
-  dropList(event: CdkDragDrop<Todo[]>) {
+  dropList(event: CdkDragDrop<ICard[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -162,12 +177,25 @@ export class BoardPage {
         event.currentIndex
       );
     }
+
+  const position =   this.boardSrv.getPosition(event.container.data,event.currentIndex)
+  event.container.data[event.currentIndex].position = position
+   const listId = Number(event.container.id)
+  const {id} = event.container.data[event.currentIndex]
+  this.cardSrv.updateCard(id,{listId,position}).subscribe( resp => {
+    // console.log(resp);
+    // console.log(event.container.data);
+  })
+  
   }
 
-  addColum() {
-    this.colums.push({
-      title: 'nuevo',
-      todos: [],
-    });
+  // private updateCard(id:ICard["id"],changes:UpdateCardDto){
+  // return  this.cardSrv.updateCard(id,changes).subscribe( resp => {
+  //     console.log(resp);
+  //   })
+  // }
+
+  ngOnDestroy(): void {
+    this.themeBoard.setThemeBoard("primary")
   }
 }

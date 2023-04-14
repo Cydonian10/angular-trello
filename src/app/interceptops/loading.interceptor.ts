@@ -16,7 +16,7 @@ export class LoadingInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     this.spinnerStore.show()
     return next.handle(request).pipe(
-      delay(4000),
+      // delay(2000),
       finalize(()=> this.spinnerStore.hide())
     );
   }

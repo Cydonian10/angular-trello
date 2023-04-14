@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
     <button
       type="button"
       [ngClass]="colors"
-      class="w-full inline-flex items-center justify-center px-6 font-medium tracking-wide text-white transition duration-200 bg-primary-600 rounded-lg hover:bg-primary-500 focus:shadow focus:outline-none active:scale-95"
+      class="w-full inline-flex items-center justify-center px-6 font-medium tracking-wide transition duration-200  rounded-lg focus:shadow focus:outline-none active:scale-95"
     >
       <ng-content></ng-content>
     </button>
@@ -19,22 +19,56 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 })
 export class ButtonComponent {
-  @Input() color: Colors = 'primary';
+   color: Colors = 'primary';
   @Input() padding: Padding = 'py-3';
 
+  @Input("color") set _color(value:Colors) {
+    this.color = value
+  }
+
   mapColors: Record<Colors, Record<string, boolean>> = {
-    success: {
-      'bg-success-600': true,
-      'hover:bg-success-500': true,
-    },
+ 
     primary: {
       'bg-primary-600': true,
-      'hover:bg-primary-500': true,
+      'hover:bg-primary-700': true,
+      "text-white":true,
     },
-    danger: {
-      'bg-danger-600': true,
-      'hover:bg-danger-500': true,
+    Sky: {
+      'bg-sky-600': true,
+      'hover:bg-sky-700': true,
+      "text-white":true,
     },
+    Yellow: {
+      'bg-yellow-600': true,
+      'hover:bg-yellow-700': true,
+      "text-white":true,
+    },
+    Green: {
+      'bg-green-600': true,
+      'hover:bg-green-700': true,
+      "text-white":true,
+    },
+    Red: {
+      'bg-red-600': true,
+      'hover:bg-red-700': true,
+      "text-white":true,
+    },
+    Violet: {
+      'bg-violet-600': true,
+      'hover:bg-violet-700': true,
+      "text-white":true,
+    },
+    Gray: {
+     'bg-gray-600': true,
+      'hover:bg-gray-700': true,
+      "text-white":true,
+    },
+    ligth: {
+      'bg-gray-100': true,
+      'hover:bg-gray-400': true,
+      "text-gray-800":true,
+    }
+
   };
 
   mapPadding:Record<Padding,Record<string,boolean>> = {
@@ -55,6 +89,7 @@ export class ButtonComponent {
   get colors() {
     const colors = this.mapColors[this.color];
     const padding = this.mapPadding[this.padding]
+   
     return { ...colors, ...padding };
   }
 }

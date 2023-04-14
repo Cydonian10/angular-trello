@@ -15,7 +15,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
     <input
       [type]="type"
       [formControl]="control"
-      class="block rounded-md w-full p-2.5 text-gray-900 border ring-1 ring-gray-300 bg-gray-50/60 sm:text-md focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-colors placeholder:text-slate-400 outline-none"
+      class="block rounded-md bg-white w-full p-2.5 text-gray-900 border ring-1 ring-gray-300 sm:text-md focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 transition-colors placeholder:text-slate-400 outline-none"
     />
     <ng-container *ngIf="control.invalid && control.touched">
       <span class="text-danger-400 font-bold text-sm" *ngFor="let err of control.errors | keyvalue">

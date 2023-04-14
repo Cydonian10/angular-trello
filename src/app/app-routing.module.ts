@@ -39,7 +39,7 @@ const routes: Routes = [
     ]
   },
   {
-    path:"board",
+    path:"board/:id",
     component:BoardLayout,
     canActivate:[AuthGuard],
     children:[

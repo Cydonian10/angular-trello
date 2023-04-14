@@ -1,16 +1,20 @@
+import { BG_COLORS } from '@/interfaces/button.interface';
+import { BgColorsPipe } from '@/shared/bg-colors.pipe';
 import { NavBarComponent } from '@/shared/navbar.component';
 import { SidebarComponent } from '@/shared/sidebar.component';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ThemeBoarStore } from '@/store/theme.store';
+import { AsyncPipe, NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'layout-board',
   standalone: true,
-  imports: [SidebarComponent, NavBarComponent, RouterOutlet],
+  imports: [AsyncPipe,SidebarComponent, NavBarComponent, RouterOutlet,NgClass,BgColorsPipe],
   template: `
     <app-navbar></app-navbar>
 
-    <div class="w-full flex items-start">
+    <div [ngClass]="BgColor|bgColors:(theme$|async)!" class="w-full flex items-start">
       <div class="w-[300px] min-h-[calc(100vh_-_80px)] border-r p-3">
         <h1>Sidebar</h1>
       </div>
@@ -31,4 +35,7 @@ import { RouterOutlet } from '@angular/router';
     `,
   ],
 })
-export class BoardLayout {}
+export class BoardLayout {
+  public theme$ = inject(ThemeBoarStore).getThmeBoard$()
+  public BgColor = BG_COLORS
+}
