@@ -19,24 +19,20 @@ import { BoardService } from '@/services/board.service';
   standalone: true,
   template: `
     <div *ngIf="!(showForm$ | async)">
-      <app-button (click)="this.toogleForm(true)" color="ligth" padding="py-2"
-        >
-      <div class="flex justify-start gap-2 w-full">
-        <img src="assets/icons/add.svg" alt="add">
-        <span>Add Card</span>
-      </div>
-      </app-button
-      >
+      <app-button (click)="this.toogleForm(true)" color="ligth" padding="py-2">
+        <div class="flex justify-start gap-2 w-full">
+          <img src="assets/icons/add.svg" alt="add" />
+          <span>Add Card</span>
+        </div>
+      </app-button>
     </div>
 
     <div *ngIf="showForm$ | async">
       <app-input [control]="cardInput"></app-input>
       <div class="flex mt-3 gap-3">
-        <app-button (click)="handleForm()" padding="py-1"
-          >
+        <app-button (click)="handleForm()" padding="py-1">
           Añadir tarjeta
-          </app-button
-        >
+        </app-button>
         <button (click)="toogleForm(false)" class="w-9">
           <img src="assets/icons/close.svg" alt="" />
         </button>
@@ -53,16 +49,16 @@ import { BoardService } from '@/services/board.service';
   ],
 })
 export class CardFormComponent {
-  private cardSrv = inject(CardService)
-  private boardSrv = inject(BoardService)
+  private cardSrv = inject(CardService);
+  private boardSrv = inject(BoardService);
 
-  @Input() list:IList = {
+  @Input() list: IList = {
     id: 1,
     position: 0,
     title: '',
     cards: [],
-    boardId:0,
-  }
+    boardId: 0,
+  };
   public showForm$ = new BehaviorSubject(false);
   public cardInput = new FormControl('', { nonNullable: true });
 
@@ -71,17 +67,19 @@ export class CardFormComponent {
   }
 
   handleForm() {
-    this.cardSrv.createCard({
-      listId:Number(this.list.id),
-      position: this.boardSrv.getPositionNewCard(this.list.cards),
-      title: this.cardInput.getRawValue(),
-      description:"bla bla bla"
-    }).subscribe({
-      next:(resp) => {
-        this.list.cards.push(resp)
-        this.showForm$.next(false)
-        console.log(this.list.cards);
-      }
-    })
+    this.cardSrv
+      .createCard({
+        listId: Number(this.list.id),
+        position: this.boardSrv.getPositionNewCard(this.list.cards),
+        title: this.cardInput.getRawValue(),
+        description: 'bla bla bla',
+      })
+      .subscribe({
+        next: (resp) => {
+          this.list.cards.push(resp);
+          this.showForm$.next(false);
+          console.log(this.list.cards);
+        },
+      });
   }
 }

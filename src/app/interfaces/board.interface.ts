@@ -28,7 +28,7 @@ export interface ICard {
 export interface CreateBoardDto
   extends Omit<IBoard, 'id' | 'userId' | 'members' | 'list'> {}
 
-export interface CreateListDto extends Omit<IList, 'id'|'cards'> {}
+export interface CreateListDto extends Omit<IList, 'id' | 'cards'> {}
 
 export interface UpdateCardDto extends Partial<ICard> {}
 export interface CreateCardDto extends Omit<ICard, 'id'> {}
