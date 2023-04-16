@@ -35,10 +35,9 @@ import { BgColorsPipe } from '@/shared/bg-colors.pipe';
               formControlName="backgroundColor"
             />
             <span
-              [ngClass]="mapbgColors | bgColors:color"
+              [ngClass]="mapbgColors | bgColors : color"
               class="border transition-colors py-2 px-4 rounded hover:cursor-pointer peer-checked:border-gray-900 peer-checked:border-2"
             >
-              
             </span>
           </label>
         </div>
@@ -54,13 +53,13 @@ import { BgColorsPipe } from '@/shared/bg-colors.pipe';
     ReactiveFormsModule,
     InputComponent,
     ButtonComponent,
-    BgColorsPipe
+    BgColorsPipe,
   ],
 })
 export class BoardFormComponent {
   private fb = inject(FormBuilder);
-  private boardSrv = inject(BoardService)
-  private router = inject(Router)
+  private boardSrv = inject(BoardService);
+  private router = inject(Router);
 
   public boardForm = this.fb.nonNullable.group({
     title: [''],
@@ -70,15 +69,8 @@ export class BoardFormComponent {
     }),
   });
 
-  arrayColors: Colors[] = [
-    'Gray',
-    'Green',
-    'Red',
-    'Sky',
-    'Violet',
-    'Yellow',
-  ];
-  
+  arrayColors: Colors[] = ['Gray', 'Green', 'Red', 'Sky', 'Violet', 'Yellow'];
+
   mapbgColors: Record<Colors, Record<string, boolean>> = {
     Sky: { 'bg-sky-500': true },
     Yellow: { 'bg-yellow-500': true },
@@ -88,10 +80,10 @@ export class BoardFormComponent {
     Gray: { 'bg-gray-500': true },
     primary: { 'bg-primary-500': true },
     ligth: { 'bg-gray-500': true },
-
+    white: { 'bg-white': true },
   };
 
-  @Output() onClose = new EventEmitter<boolean>()
+  @Output() onClose = new EventEmitter<boolean>();
 
   get title() {
     return this.boardForm.controls.title;
@@ -107,10 +99,12 @@ export class BoardFormComponent {
       return;
     }
 
-    this.boardSrv.createBoard(this.boardForm.getRawValue()).subscribe( resp => {
-      console.log(resp);
-      this.onClose.emit(false)
-      this.router.navigate(["/board",resp.id])
-    })
+    this.boardSrv
+      .createBoard(this.boardForm.getRawValue())
+      .subscribe((resp) => {
+        console.log(resp);
+        this.onClose.emit(false);
+        this.router.navigate(['/board', resp.id]);
+      });
   }
 }

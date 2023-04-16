@@ -14,16 +14,16 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink, NgClass],
   template: `
-      <div [routerLink]="['/board', data.id]">
-        <div
-          class="rounded-md h-20 w-full p-3 text-white shadow"
-          [ngClass]="colors"
-        >
-          {{ data.title }} 
-        </div>
+    <div [routerLink]="['/board', data.id]">
+      <div
+        class="rounded-md h-20 w-full p-3 text-white shadow"
+        [ngClass]="colors"
+      >
+        {{ data.title }}
       </div>
+    </div>
   `,
- changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardCardComponent {
   @Input() data: IBoard = {
@@ -32,7 +32,7 @@ export class BoardCardComponent {
     backgroundColor: 'Sky',
     userId: 0,
     members: [],
-    list:[]
+    list: [],
   };
 
   mapColors: Record<Colors, Record<string, boolean>> = {
@@ -68,11 +68,14 @@ export class BoardCardComponent {
       'bg-gray-600': true,
       'hover:bg-gray-500': true,
     },
+    white: {
+      'bg-white': true,
+      'hover:bg-gray-200': true,
+    },
   };
 
   get colors() {
     const colors = this.mapColors[this.data.backgroundColor];
     return { ...colors };
   }
-
 }

@@ -22,11 +22,12 @@ import { BehaviorSubject, map, switchMap, tap } from 'rxjs';
 import { OverlayLayout } from '@/layouts/overlay.layout';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { SpinnerComponent } from '@/shared/spinner.component';
-import { TodoModalComponent } from './components/todo-modal.component';
+import { CardModalComponent } from './components/todo-modal.component';
 import { CardFormComponent } from './components/card-form.component';
 import { ListFormComponent } from './components/list-form.component';
 import { ThemeBoarStore } from '@/store/theme.store';
 import { ListOptionsComponent } from './components/list-options.component';
+import { BoardStore } from './store/board.store';
 
 @Component({
   selector: 'app-board',
@@ -70,8 +71,8 @@ import { ListOptionsComponent } from './components/list-options.component';
             <div
               cdkDrag
               *ngFor="let item of list.cards"
-              (click)="openModalTodo(item)"
-              class="bg-white w-full min-h-[50px] rounded-md shadow-md p-2 cursor-pointer"
+              (click)="openModalTodo(item, list)"
+              class="bg-white w-full min-h-[50px] rounded-md shadow-md px-4 cursor-pointer flex items-center text-sm"
             >
               <div>{{ item.title }} - {{ item.position }}</div>
             </div>
@@ -140,6 +141,7 @@ import { ListOptionsComponent } from './components/list-options.component';
     ListFormComponent,
     ListOptionsComponent,
   ],
+  providers: [BoardStore],
 })
 export class BoardPage implements OnDestroy {
   private themeBoard = inject(ThemeBoarStore);
@@ -172,14 +174,24 @@ export class BoardPage implements OnDestroy {
 
   private dialog = inject(Dialog);
 
-  openModalTodo(data: any) {
-    const resfModal = this.dialog.open(TodoModalComponent, {
-      minWidth: '300',
+  openModalTodo(data: any, lists: IList) {
+    const resfModal = this.dialog.open(CardModalComponent, {
+      width: '50%',
+      minWidth: '400px',
       data,
       disableClose: true,
     });
-    resfModal.closed.subscribe((resp) => {
+    resfModal.closed.subscribe((resp: any) => {
       console.log(resp);
+      if (resp === undefined) return;
+      const index = lists.cards.findIndex((item) => item.id === resp.id);
+      if (resp.type === 'remove') {
+        lists.cards.splice(index, 1);
+        return;
+      }
+      if (resp.type === 'update') {
+        lists.cards[index] = resp.data;
+      }
     });
   }
 

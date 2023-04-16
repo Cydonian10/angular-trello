@@ -15,10 +15,10 @@ import { ButtonComponent } from '@/shared/button.component';
   standalone: true,
   template: `
     <div>
-      <h1>Options</h1>
-      <p>list {{ listId }}</p>
-      <app-button color="ligth" padding="py-2" (click)="removeList()">
-        Remove list
+      <h1 class="font-bold py-2">Acciones {{ listId }}</h1>
+      <hr class="block py-2" />
+      <app-button color="white" padding="py-2" (click)="removeList()">
+        <div class="w-full text-left">Remove list</div>
       </app-button>
     </div>
   `,
@@ -32,7 +32,7 @@ export class ListOptionsComponent {
   @Output() onClose = new EventEmitter<boolean>();
 
   removeList() {
-    this.listSrv.remove(this.listId).subscribe((resp) => {
+    this.listSrv.remove(this.listId).subscribe(() => {
       const index = this.lists.findIndex((item) => item.id === this.listId);
       this.lists.splice(index, 1);
       this.onClose.emit(false);

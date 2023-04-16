@@ -1,4 +1,3 @@
-
 export type Colors =
   | 'Sky'
   | 'Yellow'
@@ -8,7 +7,7 @@ export type Colors =
   | 'Gray'
   | 'primary'
   | 'ligth'
-
+  | 'white';
 
 export type Padding = 'py-1' | 'py-2' | 'py-3' | 'py-4';
 
@@ -21,6 +20,7 @@ export const BG_COLORS: Record<Colors, Record<string, boolean>> = {
   Gray: { 'bg-gray-500': true },
   primary: { 'bg-primary-500': true },
   ligth: { 'bg-gray-100': true },
+  white: { 'bg-white': true },
 };
 
 export const NAV_COLORS: Record<Colors, Record<string, boolean>> = {
@@ -32,4 +32,5 @@ export const NAV_COLORS: Record<Colors, Record<string, boolean>> = {
   Gray: { 'bg-gray-600': true },
   primary: { 'bg-primary-600': true },
   ligth: { 'bg-gray-600': true },
+  white: { 'bg-white': true },
 };

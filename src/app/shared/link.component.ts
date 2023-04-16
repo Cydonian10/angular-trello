@@ -47,6 +47,7 @@ export class LinkComponent {
     Red: { 'text-red-600': true, 'bg-red-100': true },
     Violet: { 'text-violet-600': true, 'bg-violet-100': true },
     Gray: { 'text-gray-600': true, 'bg-gray-100': true },
+    white: { 'text-gray-600': true, 'bg-gray-100': true },
   };
 
   mapColors: Record<Colors, Record<string, boolean>> = {
@@ -64,6 +65,7 @@ export class LinkComponent {
     Red: { 'hover-text-red-600': true, 'hover:bg-red-100': true },
     Violet: { 'hover-text-violet-600': true, 'hover:bg-violet-100': true },
     Gray: { 'hover-tex-grayt-600': true, 'hover:bg-gray-100': true },
+    white: { 'hover-tex-grayt-600': true, 'hover:bg-gray-100': true },
   };
 
   mapPadding: Record<Padding, Record<string, boolean>> = {

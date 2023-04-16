@@ -9,8 +9,8 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   template: `
     <button
       type="button"
+      class="w-full inline-flex items-center px-6 justify-center font-medium tracking-wide transition duration-200  rounded-lg focus:shadow focus:outline-none active:scale-95"
       [ngClass]="colors"
-      class="w-full inline-flex items-center justify-center px-6 font-medium tracking-wide transition duration-200  rounded-lg focus:shadow focus:outline-none active:scale-95"
     >
       <ng-content></ng-content>
     </button>
@@ -63,7 +63,12 @@ export class ButtonComponent {
     },
     ligth: {
       'bg-gray-200': true,
-      'hover:bg-gray-300/50': true,
+      'hover:bg-gray-300': true,
+      'text-gray-800': true,
+    },
+    white: {
+      'bg-white': true,
+      'hover:bg-gray-100': true,
       'text-gray-800': true,
     },
   };
@@ -71,6 +76,7 @@ export class ButtonComponent {
   mapPadding: Record<Padding, Record<string, boolean>> = {
     'py-1': {
       'py-1': true,
+      'px-3': true,
     },
     'py-2': {
       'py-2': true,
