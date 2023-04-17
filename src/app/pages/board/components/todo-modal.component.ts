@@ -10,18 +10,19 @@ import {
   OnInit,
   inject,
 } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-card-modal',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule, ButtonComponent, ReactiveFormsModule],
   template: `
     <div class="relative p-4 rounded-md bg-white outline-none">
       <!-- Title -->
       <div class="flex items-start justify-between">
         <h2 class="font-bold mb-4 flex gap-3">
           <img src="assets/icons/tiitle.svg" alt="title" />
-          <span>{{ data.title | titlecase }}</span>
+          <input type="text" [formControl]="titleInput" />
         </h2>
         <button
           (click)="updateCard()"
@@ -115,8 +116,11 @@ export class CardModalComponent implements OnInit {
     @Inject(DIALOG_DATA) public data: ICard
   ) {}
 
+  titleInput = new FormControl('', { nonNullable: true });
+
   ngOnInit() {
     console.log(this.data);
+    this.titleInput.setValue(this.data.title);
   }
 
   showDescriptonToggle(value: boolean) {
@@ -133,11 +137,12 @@ export class CardModalComponent implements OnInit {
     this.cardSrv
       .updateCard(this.data.id, {
         description: 'bla bla bl desde el forntend',
-        title: 'update title',
+        title: this.titleInput.getRawValue(),
       })
       .subscribe((resp) => {
         // console.log(resp);
-        this.dialogRef.close({ type: 'update', id: this.data.id, data: resp });
+        // this.dialogRef.close({ type: 'updkte', id: this.data.id, data: resp });
+        //this.dialogRef.disableClose;
       });
   }
 }
